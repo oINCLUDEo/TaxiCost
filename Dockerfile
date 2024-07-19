@@ -13,8 +13,8 @@ RUN apt-get update && apt-get install -y \
 
 # Устанавливаем Google Chrome
 RUN wget -q -O /usr/share/keyrings/google-chrome-keyring.gpg https://dl-ssl.google.com/linux/linux_signing_key.pub
-RUN sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
-RUN apt-get -y update && apt-get install -y google-chrome-stable
+RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list
+RUN apt-get update && apt-get install -y google-chrome-stable
 
 # Получаем последнюю версию ChromeDriver, соответствующую версии Chrome
 RUN CHROME_VERSION=$(google-chrome --version | grep -oP '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+') && \
