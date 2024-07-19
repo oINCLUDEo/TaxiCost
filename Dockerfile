@@ -1,5 +1,5 @@
 # Используем базовый образ Python
-FROM python:3.10
+FROM python:3.9
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
@@ -20,8 +20,9 @@ RUN curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor
     && apt-get install -y google-chrome-stable \
     && rm -rf /var/lib/apt/lists/*
 
-# Скачиваем и устанавливаем ChromeDriver
-RUN CHROME_DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE) \
+# Устанавливаем версию ChromeDriver, совместимую с установленной версией Google Chrome
+RUN CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+') \
+    && CHROME_DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}) \
     && wget -q -O /tmp/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip \
     && unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/ \
     && chmod +x /usr/local/bin/chromedriver \
@@ -31,7 +32,7 @@ RUN CHROME_DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_
 RUN apt-get update && apt-get install -y \
     xvfb \
     --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
 
 # Копируем все файлы в рабочую директорию
 COPY . /app
