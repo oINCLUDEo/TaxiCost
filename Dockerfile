@@ -20,16 +20,6 @@ RUN curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor
     && apt-get install -y google-chrome-stable \
     && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем версию ChromeDriver, совместимую с установленной версией Google Chrome
-RUN CHROME_VERSION=$(google-chrome --version | awk '{print $2}' | cut -d. -f1,2) && \
-    echo "Detected Chrome version: $CHROME_VERSION" && \
-    CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION) && \
-    echo "Detected ChromeDriver version: $CHROME_DRIVER_VERSION" && \
-    wget -q -O /tmp/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip && \
-    unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/ && \
-    chmod +x /usr/local/bin/chromedriver && \
-    rm /tmp/chromedriver_linux64.zip
-
 # Устанавливаем необходимые зависимости для запуска ChromeDriver
 RUN apt-get update && apt-get install -y \
     xvfb \
