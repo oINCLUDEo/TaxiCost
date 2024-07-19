@@ -8,6 +8,11 @@ from config import url_maxim, url_citimobil
 from transliterate import translit
 from selenium import webdriver
 
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-gpu")
+
 
 def main(actual_address, end_address):
     driver = webdriver.Chrome()
@@ -15,7 +20,7 @@ def main(actual_address, end_address):
 
 
 def citimobil(actual_address, end_address):
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(chrome_options)
     city = translit(actual_address.split(', ')[0], language_code='ru', reversed=True)
     other_address = actual_address.split(', ')[1]
     other_address2 = end_address.split(', ')[1]
